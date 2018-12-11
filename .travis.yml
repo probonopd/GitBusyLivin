@@ -9,13 +9,15 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install qt510base qt510svg gcc-8
+  - sudo apt-get -y install qt510base qt510svg gcc-8 libgit2-dev
   - source /opt/qt*/bin/qt*-env.sh
 
 script:
   - qmake CONFIG+=release PREFIX=/usr
   - make -j$(nproc)
   - make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
+  - mkdir -p appdir/usr/share/applications ; cp gitbusylivin.desktop appdir/usr/share/applications/
+  - mkdir -p appdir/usr/share/icons/hicolor/scalable/apps ; touch  appdir/usr/share/icons/hicolor/scalable/apps.svg # FIXME
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
